@@ -1,0 +1,13 @@
+{
+    "Test Case 1": {
+      "source_query": "select SUM(case when bank_name = 'Federal' then total_outstanding else 0 end) as federal from staging_dashboard.collection_details cd where bank_name in ('Federal')",
+      "destination_query": "select SUM(case when bank_name = 'Federal' then total_outstanding else 0 end) as federal from staging_dashboard.collection_details cd where bank_name in ('Federal')",
+      "widget_param": "Portfolio_Widget"
+    },
+    "Test Case 2": {
+        "source_query": "select SUM(case when bank_name = 'Federal' then total_outstanding else 0 end) as federal from staging_dashboard.collection_details cd where bank_name in ('Federal')",
+        "destination_query": "select SUM(case when bank_name = 'Federal' then total_outstanding else 0 end) as federal from staging_dashboard.collection_details cd where bank_name in ('Federal')",
+        "widget_param": "Portfolio_Widget"
+      }
+  }
+  
