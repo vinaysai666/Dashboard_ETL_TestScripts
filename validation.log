@@ -1,0 +1,27 @@
+2025-01-28 14:57:22,861 - Running Test Case: Test Case 1
+2025-01-28 14:57:50,932 - Running Test Case: Test Case 1
+2025-01-28 14:57:52,149 - Source Data (Rounded) for Test Case Test Case 1:
+     federal
+4.539016e+09
+2025-01-28 14:57:52,150 - Destination Data (Rounded) for Test Case Test Case 1:
+     federal
+4.539016e+09
+2025-01-28 14:57:52,164 - Validation Data for Test Case Test Case 1:
+Test_Case_Id       Source  Destination Validation Status     Widget_Param
+ Test Case 1 4.539016e+09 4.539016e+09              PASS Portfolio_Widget
+2025-01-28 14:57:52,164 - Running Test Case: Test Case 2
+2025-01-28 14:58:18,611 - Running Test Case: Test Case 1
+2025-01-28 14:58:45,791 - Running Test Case: Test Case 1
+2025-01-28 14:59:11,977 - Running Test Case: Test Case 1
+2025-01-28 14:59:38,836 - Running Test Case: Test Case 1
+2025-01-28 15:00:10,236 - Running Test Case: Test Case 1
+2025-01-28 15:00:11,381 - Source Data (Rounded) for Test Case Test Case 1:
+     federal
+4.539016e+09
+2025-01-28 15:00:11,383 - Destination Data (Rounded) for Test Case Test Case 1:
+     federal
+4.539016e+09
+2025-01-28 15:00:11,391 - Validation Data for Test Case Test Case 1:
+Test_Case_Id       Source  Destination Validation Status     Widget_Param
+ Test Case 1 4.539016e+09 4.539016e+09              PASS Portfolio_Widget
+2025-01-28 15:00:11,488 - Validation results for all test cases saved to 'all_validation_results_with_widget.xlsx'.
