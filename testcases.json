@@ -1,9 +1,98 @@
 {
-    "Test Case 1": {
-      "source_query": "select SUM(case when bank_name = 'Federal' then total_outstanding else 0 end) as federal from staging_dashboard.collection_details cd where bank_name in ('Federal')",
-      "destination_query": "select SUM(case when bank_name = 'Federal' then total_outstanding else 0 end) as federal from staging_dashboard.collection_details cd where bank_name in ('Federal')",
-      "widget_param": "Portfolio_Widget"
-    }
-    
-  }
-  
+  "Test Case 1": {
+    "source_query": "SELECT SUM(CASE WHEN bank_name = 'Federal' THEN total_outstanding ELSE 0 END) AS federal FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal')",
+    "destination_query": "SELECT SUM(CASE WHEN p.product_id = 'PD-FED-JLG' THEN ld.total_outstanding ELSE 0 END) AS fed_outstanding FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id JOIN transformation.user_mapping um ON um.loan_id = cam.loan_id JOIN transformation.products p ON cam.product_id = p.product_id WHERE p.product_id IN ('PD-FED-JLG')",
+    "widget_param": "Bank_Overview_Widget",
+    "parameter":"Total_Outstandingamount"
+  },
+  "Test Case 2": {
+    "source_query": "SELECT COUNT(DISTINCT CASE WHEN bank_name = 'Federal' THEN loan_account_number END) AS federal FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal')",
+    "destination_query":"select COUNT(CASE WHEN p.product_id = 'PD-FED-JLG' THEN ld.loan_id ELSE NULL END) AS fed_active_loan from transformation.loan_details ld join transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id join transformation.user_mapping um ON um.loan_id = cam.loan_id join transformation.products p ON cam.product_id = p.product_id where p.product_id IN ('PD-FED-JLG')",
+    "widget_param": "Bank_Overview_Widget",
+    "parameter":"Customers_count"
+  },
+  "Test Case 3":{
+    "source_query":"SELECT COUNT(DISTINCT CASE WHEN bank_name = 'Federal' THEN loan_account_number END) AS federal FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal')",
+    "destination_query":"select COUNT(CASE WHEN p.product_id = 'PD-FED-JLG' THEN ld.loan_id ELSE NULL END) AS fed_active_loan from transformation.loan_details ld join transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id join transformation.user_mapping um ON um.loan_id = cam.loan_id join transformation.products p ON cam.product_id = p.product_id where p.product_id IN ('PD-FED-JLG')",
+    "widget_param": "Bank_Overview_Widget",
+    "parameter":"Active_Loans"
+  },
+  "Test Case 4":{
+    "source_query":"select SUM(CASE WHEN bank_name = 'Federal' THEN total_outstanding ELSE 0 END) AS federal from staging_dashboard.collection_details cd where bank_name IN ('Federal')",
+    "destination_query":"select SUM(CASE WHEN p.product_id = 'PD-FED-JLG' THEN ld.total_outstanding ELSE 0 END) AS fed_outstanding from transformation.loan_details ld join transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id join transformation.user_mapping um ON um.loan_id = cam.loan_id join transformation.products p ON cam.product_id = p.product_id where p.product_id IN ('PD-FED-JLG')",
+    "widget_param":"Product_Overview",
+    "parameter":"Total Outstanding"
+  },
+  "Test Case 5":{
+    "source_query":"SELECT COUNT(DISTINCT CASE WHEN bank_name = 'Federal' THEN loan_account_number END) AS federal FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal')",
+    "destination_query":"select COUNT(CASE WHEN p.product_id = 'PD-FED-JLG' THEN ld.loan_id ELSE NULL END) AS fed_active_loan from transformation.loan_details ld join transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id join transformation.user_mapping um ON um.loan_id = cam.loan_id join  transformation.products p ON cam.product_id = p.product_id where p.product_id IN ('PD-FED-JLG')",
+    "widget_param":"Product_Overview",
+    "parameter":"Customers"
+  },
+  "Test Case 6":{
+    "source_query":"SELECT COUNT(DISTINCT CASE WHEN bank_name = 'Federal' THEN loan_account_number END) AS federal FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal')",
+    "destination_query":"select COUNT(CASE WHEN p.product_id = 'PD-FED-JLG' THEN ld.loan_id ELSE NULL END) AS fed_active_loan from transformation.loan_details ld join transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id join transformation.user_mapping um ON um.loan_id = cam.loan_id join transformation.products p ON cam.product_id = p.product_id where p.product_id IN ('PD-FED-JLG')",
+    "widget_param":"Product_Overview",
+    "parameter":"Active Loans"
+  },
+  "Test Case 7":{
+    "source_query":"SELECT SUM(amount) FROM staging_dashboard.disbursement_details_fed ddf LEFT JOIN staging_dashboard.loan_life_cycle_fed llcf ON ddf.cust_id = llcf.cust_id LEFT JOIN staging_dashboard.customers_fed cf ON ddf.cust_id = cf.cust_id WHERE DATE(llcf.source_created_at) >= '2025-01-01' AND DATE(llcf.source_created_at) <= '2025-01-27' AND llcf.level = 'DISBURSEMENT' AND llcf.status = 'SUCCESS'",
+    "destination_query":"SELECT SUM(ld.loan_amount) FROM transformation.loan_details ld LEFT JOIN transformation.application_life_cycle alc ON ld.customer_id = alc.customer_id LEFT JOIN transformation.user_mapping um ON um.application_id = ld.application_id LEFT JOIN transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id WHERE DATE(ld.disbursed_date) >= '2025-01-01' AND DATE(ld.disbursed_date) <= '2025-01-27' AND alc.level = 'DISBURSEMENT' AND alc.status = 'COMPLETED' AND cam.bank_id = 'FED'",
+    "widget_param":"Portfolio_Loan_Disbursed",
+    "parameter":"Loan disbursed"
+  },
+  "Test Case 8":{
+    "source_query":"SELECT COUNT(DISTINCT ddf.cust_id) FROM staging_dashboard.disbursement_details_fed ddf LEFT JOIN staging_dashboard.loan_life_cycle_fed llcf ON ddf.cust_id = llcf.cust_id LEFT JOIN staging_dashboard.customers_fed cf ON ddf.cust_id = cf.cust_id WHERE DATE(llcf.source_created_at) >= '2025-01-01' AND DATE(llcf.source_created_at) <= '2025-01-28' AND llcf.level = 'DISBURSEMENT' AND llcf.status = 'SUCCESS'",
+    "destination_query":"SELECT COUNT(DISTINCT alc.customer_id) FROM transformation.loan_details ld LEFT JOIN transformation.application_life_cycle alc ON ld.customer_id = alc.customer_id LEFT JOIN transformation.user_mapping um ON um.application_id = ld.application_id LEFT JOIN transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id WHERE DATE(ld.disbursed_date) >= '2025-01-01' AND DATE(ld.disbursed_date) <= '2025-01-28' AND alc.level = 'DISBURSEMENT' AND alc.status = 'COMPLETED' AND cam.bank_id = 'FED'",
+    "widget_param":"Portfolio_Loan_Disbursed",
+    "parameter":"Customers"
+  },
+  "Test Case 9":{
+    "source_query":"SELECT COUNT(DISTINCT ddf.cust_id) FROM staging_dashboard.disbursement_details_fed ddf LEFT JOIN staging_dashboard.loan_life_cycle_fed llcf ON ddf.cust_id = llcf.cust_id LEFT JOIN staging_dashboard.customers_fed cf ON ddf.cust_id = cf.cust_id WHERE DATE(llcf.source_created_at) >= '2025-01-01' AND DATE(llcf.source_created_at) <= '2025-01-28' AND llcf.level = 'DISBURSEMENT' AND llcf.status = 'SUCCESS'",
+    "destination_query":"SELECT COUNT(DISTINCT alc.customer_id) FROM transformation.loan_details ld LEFT JOIN transformation.application_life_cycle alc ON ld.customer_id = alc.customer_id LEFT JOIN transformation.user_mapping um ON um.application_id = ld.application_id LEFT JOIN transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id WHERE DATE(ld.disbursed_date) >= '2025-01-01' AND DATE(ld.disbursed_date) <= '2025-01-28' AND alc.level = 'DISBURSEMENT' AND alc.status = 'COMPLETED' AND cam.bank_id = 'FED'",
+    "widget_param":"Portfolio_Loan_Disbursed",
+    "parameter":"Loans"
+  },
+  "Test Case 10":{
+    "source_query":"SELECT SUM(amount) FROM staging_dashboard.disbursement_details_fed ddf LEFT JOIN staging_dashboard.loan_life_cycle_fed llcf ON ddf.cust_id = llcf.cust_id LEFT JOIN staging_dashboard.customers_fed cf ON ddf.cust_id = cf.cust_id WHERE DATE(llcf.source_created_at) >= '2025-01-01' AND DATE(llcf.source_created_at) <= '2025-01-27' AND llcf.level = 'DISBURSEMENT' AND llcf.status = 'SUCCESS'",
+    "destination_query":"SELECT SUM(ld.loan_amount) FROM transformation.loan_details ld LEFT JOIN transformation.application_life_cycle alc ON ld.customer_id = alc.customer_id LEFT JOIN transformation.user_mapping um ON um.application_id = ld.application_id LEFT JOIN transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id WHERE DATE(ld.disbursed_date) >= '2025-01-01' AND DATE(ld.disbursed_date) <= '2025-01-27' AND alc.level = 'DISBURSEMENT' AND alc.status = 'COMPLETED' AND cam.bank_id = 'FED'",
+    "widget_param":"Portfolio_Loan_Disbursed_Today",
+    "parameter":"Loan disbursed"
+  },
+  "Test Case 11":{
+    "source_query":"SELECT COUNT(DISTINCT ddf.cust_id) FROM staging_dashboard.disbursement_details_fed ddf LEFT JOIN staging_dashboard.loan_life_cycle_fed llcf ON ddf.cust_id = llcf.cust_id LEFT JOIN staging_dashboard.customers_fed cf ON ddf.cust_id = cf.cust_id WHERE DATE(llcf.source_created_at) >= '2025-01-01' AND DATE(llcf.source_created_at) <= '2025-01-28' AND llcf.level = 'DISBURSEMENT' AND llcf.status = 'SUCCESS'",
+    "destination_query":"SELECT COUNT(DISTINCT alc.customer_id) FROM transformation.loan_details ld LEFT JOIN transformation.application_life_cycle alc ON ld.customer_id = alc.customer_id LEFT JOIN transformation.user_mapping um ON um.application_id = ld.application_id LEFT JOIN transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id WHERE DATE(ld.disbursed_date) >= '2025-01-01' AND DATE(ld.disbursed_date) <= '2025-01-28' AND alc.level = 'DISBURSEMENT' AND alc.status = 'COMPLETED' AND cam.bank_id = 'FED'",
+    "widget_param":"Portfolio_Loan_Disbursed_Today",
+    "parameter":"Customers"
+  },
+  "Test Case 12":{
+    "source_query":"SELECT COUNT(DISTINCT ddf.cust_id) FROM staging_dashboard.disbursement_details_fed ddf LEFT JOIN staging_dashboard.loan_life_cycle_fed llcf ON ddf.cust_id = llcf.cust_id LEFT JOIN staging_dashboard.customers_fed cf ON ddf.cust_id = cf.cust_id WHERE DATE(llcf.source_created_at) >= '2025-01-01' AND DATE(llcf.source_created_at) <= '2025-01-28' AND llcf.level = 'DISBURSEMENT' AND llcf.status = 'SUCCESS'",
+    "destination_query":"SELECT COUNT(DISTINCT alc.customer_id) FROM transformation.loan_details ld LEFT JOIN transformation.application_life_cycle alc ON ld.customer_id = alc.customer_id LEFT JOIN transformation.user_mapping um ON um.application_id = ld.application_id LEFT JOIN transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id WHERE DATE(ld.disbursed_date) >= '2025-01-01' AND DATE(ld.disbursed_date) <= '2025-01-28' AND alc.level = 'DISBURSEMENT' AND alc.status = 'COMPLETED' AND cam.bank_id = 'FED'",
+    "widget_param":"Portfolio_Loan_Disbursed_Today",
+    "parameter":"Loans"
+  },
+  "Test Case 13":{
+    "source_query":"SELECT SUM(amount) FROM staging_dashboard.disbursement_details_fed ddf LEFT JOIN staging_dashboard.loan_life_cycle_fed llcf ON ddf.cust_id = llcf.cust_id LEFT JOIN staging_dashboard.customers_fed cf ON ddf.cust_id = cf.cust_id WHERE DATE(llcf.source_created_at) >= '2025-01-01' AND DATE(llcf.source_created_at) <= '2025-01-27' AND llcf.level = 'DISBURSEMENT' AND llcf.status = 'SUCCESS'",
+    "destination_query":"SELECT SUM(ld.loan_amount) FROM transformation.loan_details ld LEFT JOIN transformation.application_life_cycle alc ON ld.customer_id = alc.customer_id LEFT JOIN transformation.user_mapping um ON um.application_id = ld.application_id LEFT JOIN transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id WHERE DATE(ld.disbursed_date) >= '2025-01-01' AND DATE(ld.disbursed_date) <= '2025-01-27' AND alc.level = 'DISBURSEMENT' AND alc.status = 'COMPLETED' AND cam.bank_id = 'FED'",
+    "widget_param":"Portfolio_Loan_Disbursed_Yesterday",
+    "parameter":"Loan disbursed"
+  },
+  "Test Case 14":{
+    "source_query":"SELECT COUNT(DISTINCT ddf.cust_id) FROM staging_dashboard.disbursement_details_fed ddf LEFT JOIN staging_dashboard.loan_life_cycle_fed llcf ON ddf.cust_id = llcf.cust_id LEFT JOIN staging_dashboard.customers_fed cf ON ddf.cust_id = cf.cust_id WHERE DATE(llcf.source_created_at) >= '2025-01-01' AND DATE(llcf.source_created_at) <= '2025-01-28' AND llcf.level = 'DISBURSEMENT' AND llcf.status = 'SUCCESS'",
+    "destination_query":"SELECT COUNT(DISTINCT alc.customer_id) FROM transformation.loan_details ld LEFT JOIN transformation.application_life_cycle alc ON ld.customer_id = alc.customer_id LEFT JOIN transformation.user_mapping um ON um.application_id = ld.application_id LEFT JOIN transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id WHERE DATE(ld.disbursed_date) >= '2025-01-01' AND DATE(ld.disbursed_date) <= '2025-01-28' AND alc.level = 'DISBURSEMENT' AND alc.status = 'COMPLETED' AND cam.bank_id = 'FED'",
+    "widget_param":"Portfolio_Loan_Disbursed_Yesterday",
+    "parameter":"Customers"
+  },
+  "Test Case 15":{
+    "source_query":"SELECT COUNT(DISTINCT ddf.cust_id) FROM staging_dashboard.disbursement_details_fed ddf LEFT JOIN staging_dashboard.loan_life_cycle_fed llcf ON ddf.cust_id = llcf.cust_id LEFT JOIN staging_dashboard.customers_fed cf ON ddf.cust_id = cf.cust_id WHERE DATE(llcf.source_created_at) >= '2025-01-01' AND DATE(llcf.source_created_at) <= '2025-01-28' AND llcf.level = 'DISBURSEMENT' AND llcf.status = 'SUCCESS'",
+    "destination_query":"SELECT COUNT(DISTINCT alc.customer_id) FROM transformation.loan_details ld LEFT JOIN transformation.application_life_cycle alc ON ld.customer_id = alc.customer_id LEFT JOIN transformation.user_mapping um ON um.application_id = ld.application_id LEFT JOIN transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id WHERE DATE(ld.disbursed_date) >= '2025-01-01' AND DATE(ld.disbursed_date) <= '2025-01-28' AND alc.level = 'DISBURSEMENT' AND alc.status = 'COMPLETED' AND cam.bank_id = 'FED'",
+    "widget_param":"Portfolio_Loan_Disbursed_Yesterday",
+    "parameter":"Loans"
+  },
+  "Test Case 16":{
+    "source_query":"SELECT COUNT(DISTINCT loan_account_number) FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal')",
+    "destination_query":"SELECT COUNT(DISTINCT ld.loan_id) FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id JOIN transformation.user_mapping um ON um.loan_id = cam.loan_id JOIN transformation.products p ON cam.product_id = p.product_id WHERE p.product_id IN ('PD-FED-JLG')",
+    "widget_param":"Portfolio_Items_Widget",
+    "parameter":"Active Loans"
+  }  
+}

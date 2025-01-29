@@ -10,7 +10,7 @@ def get_db_connection(db_key):
                 host=config["host"],user=config["user"],
                 password=config["password"], dbname=config["database"],
                 port=config["port"]
-
+                
             )
         else:
             raise ValueError("Unsupported database type")
