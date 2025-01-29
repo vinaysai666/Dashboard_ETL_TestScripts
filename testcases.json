@@ -94,5 +94,90 @@
     "destination_query":"SELECT COUNT(DISTINCT ld.loan_id) FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id JOIN transformation.user_mapping um ON um.loan_id = cam.loan_id JOIN transformation.products p ON cam.product_id = p.product_id WHERE p.product_id IN ('PD-FED-JLG')",
     "widget_param":"Portfolio_Items_Widget",
     "parameter":"Active Loans"
-  }  
+  },
+  "Test Case 17":{
+    "source_query":"SELECT SUM(total_outstanding) FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal')",
+    "destination_query":"SELECT SUM(ld.total_outstanding) FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id JOIN transformation.user_mapping um ON um.loan_id = cam.loan_id JOIN transformation.products p ON cam.product_id = p.product_id WHERE p.product_id IN ('PD-FED-JLG')",
+    "widget_param":"Portfolio_Items_Widget",
+    "parameter":"OutStanding"
+  },
+  "Test Case 18":{
+    "source_query":"SELECT sum(cd.total_outstanding) FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal') AND cd.dpd_days > 90",
+    "destination_query":"SELECT sum(total_outstanding) FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.loan_id = ld.loan_id AND ld.dpd > 90",
+    "widget_param":"Portfolio_Items_Widget",
+    "parameter":"Portfolio at Risk"
+  },
+  "Test Case 19":{
+    "source_query":"SELECT sum(amount) FROM staging_dashboard.disbursement_details_fed ddf LEFT JOIN staging_dashboard.loan_life_cycle_fed llcf ON ddf.cust_id = llcf.cust_id LEFT JOIN staging_dashboard.customers_fed cf ON ddf.cust_id = cf.cust_id WHERE llcf.level = 'DISBURSEMENT' AND llcf.status = 'SUCCESS'",
+    "destination_query":"SELECT sum(ld.loan_amount) FROM transformation.loan_details ld LEFT JOIN transformation.application_life_cycle alc ON ld.application_id = alc.application_id LEFT JOIN transformation.user_mapping um ON um.application_id = ld.application_id LEFT JOIN transformation.customer_application_mapping cam ON cam.customer_id = ld.customer_id WHERE cam.bank_id = 'FED' AND um.user_type = 'disbursement_user' AND alc.level = 'DISBURSEMENT' AND alc.status = 'COMPLETED'",
+    "widget_param":"Portfolio_Items_Widget",
+    "parameter":"Loans Disbursed"
+  },
+  "Test Case 20":{
+    "source_query":"SELECT sum(cd.total_outstanding) FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal') AND cd.dpd_days = 0",
+    "destination_query":"SELECT sum(total_outstanding) FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.loan_id = ld.loan_id JOIN transformation.user_mapping um ON um.loan_id = cam.loan_id AND ld.dpd = 0",
+    "widget_param":"Portfolio_Health_Category_OTR",
+    "parameter":"Total Outstanding"
+  },
+  "Test Case 21":{
+    "source_query":"SELECT COUNT(DISTINCT loan_account_number) FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal') AND cd.dpd_days = 0",
+    "destination_query":"SELECT distinct(count(ld.loan_id)) FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.loan_id = ld.loan_id JOIN transformation.user_mapping um ON um.loan_id = cam.loan_id AND ld.dpd = 0",
+    "widget_param":"Portfolio_Health_Category_OTR",
+    "parameter":"Total Customers"
+  },
+  "Test Case 22":{
+    "source_query":"SELECT sum(cd.total_outstanding) FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal') AND cd.dpd_days > 0 AND cd.dpd_days < 31",
+    "destination_query":"SELECT sum(total_outstanding) FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.loan_id = ld.loan_id JOIN transformation.user_mapping um ON um.loan_id = cam.loan_id AND ld.dpd > 0 AND ld.dpd < 31",
+    "widget_param":"Portfolio_Health_Category_SMA0",
+    "parameter":"Total Outstanding"
+  },
+  "Test Case 23":{
+    "source_query":"SELECT COUNT(DISTINCT loan_account_number) FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal') AND cd.dpd_days > 0 AND cd.dpd_days < 31",
+    "destination_query":"SELECT distinct(count(ld.loan_id)) FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.loan_id = ld.loan_id JOIN transformation.user_mapping um ON um.loan_id = cam.loan_id AND ld.dpd > 0 AND ld.dpd < 31",
+    "widget_param":"Portfolio_Health_Category_SMA0",
+    "parameter":"Total Customers"
+  },
+  "Test Case 24":{
+    "source_query":"SELECT sum(cd.total_outstanding) FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal') AND cd.dpd_days > 30 AND cd.dpd_days < 61",
+    "destination_query":"SELECT sum(total_outstanding) FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.loan_id = ld.loan_id JOIN transformation.user_mapping um ON um.loan_id = cam.loan_id AND ld.dpd > 30 AND ld.dpd < 61",
+    "widget_param":"Portfolio_Health_Category_SMA1",
+    "parameter":"Total Outstanding"
+  },
+  "Test Case 25":{
+    "source_query":"SELECT COUNT(DISTINCT loan_account_number) FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal') AND cd.dpd_days > 30 AND cd.dpd_days < 61",
+    "destination_query":"SELECT distinct(count(ld.loan_id)) FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.loan_id = ld.loan_id JOIN transformation.user_mapping um ON um.loan_id = cam.loan_id AND ld.dpd > 30 AND ld.dpd < 61",
+    "widget_param":"Portfolio_Health_Category_SMA1",
+    "parameter":"Total Customers"
+  },
+  "Test Case 26":{
+    "source_query":"SELECT sum(cd.total_outstanding) FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal') AND cd.dpd_days > 60 AND cd.dpd_days < 90",
+    "destination_query":"SELECT sum(total_outstanding) FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.loan_id = ld.loan_id JOIN transformation.user_mapping um ON um.loan_id = cam.loan_id AND ld.dpd > 60 AND ld.dpd < 90",
+    "widget_param":"Portfolio_Health_Category_SMA2",
+    "parameter":"Total Outstanding"
+  },
+  "Test Case 27":{
+    "source_query":"SELECT COUNT(DISTINCT loan_account_number) FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal') AND cd.dpd_days > 60 AND cd.dpd_days < 90",
+    "destination_query":"SELECT distinct(count(ld.loan_id)) FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.loan_id = ld.loan_id JOIN transformation.user_mapping um ON um.loan_id = cam.loan_id AND ld.dpd > 60 AND ld.dpd < 90",
+    "widget_param":"Portfolio_Health_Category_SMA2",
+    "parameter":"Total Customers"
+  },
+  "Test Case 28":{
+    "source_query":"SELECT sum(cd.total_outstanding) FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal') AND cd.dpd_days > 90",
+    "destination_query":"SELECT sum(total_outstanding) FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.loan_id = ld.loan_id JOIN transformation.user_mapping um ON um.loan_id = cam.loan_id AND ld.dpd > 90",
+    "widget_param":"Portfolio_Health_Category_NPA",
+    "parameter":"Total Outstanding"
+  },
+  "Test Case 29":{
+    "source_query":"SELECT COUNT(DISTINCT loan_account_number) FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal') AND cd.dpd_days > 90",
+    "destination_query":"SELECT distinct(count(ld.loan_id)) FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.loan_id = ld.loan_id JOIN transformation.user_mapping um ON um.loan_id = cam.loan_id AND ld.dpd > 90",
+    "widget_param":"Portfolio_Health_Category_NPA",
+    "parameter":"Total Customers"
+  },
+  "Test Case 30":{
+    "source_query":"SELECT COUNT(DISTINCT loan_account_number) FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal') AND cd.dpd_days > 90",
+    "destination_query":"SELECT distinct(count(ld.loan_id)) FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.loan_id = ld.loan_id JOIN transformation.user_mapping um ON um.loan_id = cam.loan_id AND ld.dpd > 90",
+    "widget_param":"Portfolio_Health_Category_NPA",
+    "parameter":"Total Customers"
+  }
+
 }
