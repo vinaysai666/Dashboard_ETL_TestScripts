@@ -1,3 +1,8 @@
+import sys
+
+sys.dont_write_bytecode = True
+
+
 import pymysql
 import psycopg2
 from config.db_config import DB_CONFIGS

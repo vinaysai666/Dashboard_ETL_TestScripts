@@ -1,3 +1,7 @@
+import sys
+
+sys.dont_write_bytecode = True
+
 from validation.validator import validate_data
 from  utils.email_generator import email_generation
 

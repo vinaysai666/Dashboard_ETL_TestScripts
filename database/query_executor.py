@@ -1,3 +1,5 @@
+import sys
+sys.dont_write_bytecode = True
 import pandas as pd
 from database.db_connection import get_db_connection
 

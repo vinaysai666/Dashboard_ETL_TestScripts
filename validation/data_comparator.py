@@ -1,3 +1,7 @@
+import sys
+
+sys.dont_write_bytecode = True
+
 import pandas as pd
 
 def compare_data(source_df, destination_df):

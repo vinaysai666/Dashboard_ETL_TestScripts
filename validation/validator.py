@@ -1,3 +1,7 @@
+import sys
+
+sys.dont_write_bytecode = True
+
 import pandas as pd
 import json
 from database.query_executor import fetch_data
