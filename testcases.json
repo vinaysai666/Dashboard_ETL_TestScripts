@@ -178,5 +178,21 @@
     "destination_query":"SELECT distinct(count(ld.loan_id)) FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.loan_id = ld.loan_id JOIN transformation.user_mapping um ON um.loan_id = cam.loan_id AND ld.dpd > 90",
     "widget_param":"Portfolio_Health_Category_NPA",
     "parameter":"Total Customers"
-  }
+  },
+
+  "Test Case 31":{
+    "source_query":"SELECT COUNT(DISTINCT loan_account_number) FROM staging_dashboard.collection_details cd WHERE bank_name IN ('Federal') AND cd.dpd_days > 90",
+    "destination_query":"SELECT distinct(count(ld.loan_id)) FROM transformation.loan_details ld JOIN transformation.customer_application_mapping cam ON cam.loan_id = ld.loan_id JOIN transformation.user_mapping um ON um.loan_id = cam.loan_id AND ld.dpd > 90",
+    "widget_param":"Portfolio_Health_Category_NPA",
+    "parameter":"Total Customers"
+  },
+
+  "Test Case 32": {
+  "source_query": "select sum(t1.amount_paid) from staging_dashboard.transactions t1 left join staging_dashboard.collection_details t2 on t2.loan_account_number = t1.loan_id where t2.bank_name = 'Federal' and t1.transaction_date >= TO_DATE(TO_CHAR(date_trunc('month',CURRENT_DATE), 'YYYY-MM-DD'), 'YYYY-MM-DD') and t1.transaction_date <= TO_DATE(TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD'), 'YYYY-MM-DD')",
+  "destination_query": "select SUM(tl.transaction_amount) from transformation.transaction_log tl join transformation.user_mapping um on um.loan_id = tl.loan_id join transformation.customer_application_mapping cam on um.loan_id = cam.loan_id where tl.transaction_date >= DATE_TRUNC('month', CURRENT_DATE) and tl.transaction_date <= CURRENT_DATE and cam.bank_id = 'FED';",
+  "widget_param": "collection_activity_widget_Month",
+  "parameter": "Collected"
+}
+
+
 }
