@@ -25,6 +25,9 @@ def validate_data(test_cases_file,max_retries=5,retry_delay=10):
         destination_query = details["destination_query"]
         widget_param = details["widget_param"]
         parameter=details["parameter"]
+        module=details["module"]
+        level=details["level"]
+
 
         retries=0
         while(retries<max_retries):
@@ -54,11 +57,13 @@ def validate_data(test_cases_file,max_retries=5,retry_delay=10):
                         validation_status = 'FAIL'
                     test_case_results = pd.DataFrame({
                         'Test_Case_Id':test_case,
-                        'Source': source_values,
-                        'Destination': destination_values,
+                        'Staging': source_values,
+                        'Transformation': destination_values,
                         'Validation Status': [validation_status],
-                        'Widget_Param':widget_param,
-                        'parameter':parameter
+                        'Widget_name':widget_param,
+                        'Parameter':parameter,
+                        'Module':module,
+                        'level':level
                     })
                     time.sleep(30)
                     all_results.append(test_case_results)
@@ -80,7 +85,7 @@ def validate_data(test_cases_file,max_retries=5,retry_delay=10):
     if all_results:
         final_results_df = pd.concat(all_results, ignore_index=True)
         try:
-            final_results_df.to_excel("Test_Execution_Report.xlsx", index=False)
+            final_results_df.to_excel("Test_Execution_Report_Feb19.xlsx", index=False)
             log_results("Validation results for all test cases saved to 'Test_Execution_Report.xlsx'.")
         except Exception as e:
             log_results(f"Error saving validation data: {e}")
