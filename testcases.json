@@ -900,15 +900,15 @@
   },
 
   "Test Case 107":{
-    "source_query":"select count(distinct(cust_id)) from staging_dashboard.customer_life_cycle_fed clcf where level = 'EKYC' and status = 'COMPLETED' and source_created_at >= DATE_TRUNC('month', CURRENT_DATE)::date",
-    "destination_query":"select sum(prospects_sourced) from transformation.fo_wise_daily_summary fwds where bank_id ='FED' and source_date>=DATE_TRUNC('month', CURRENT_DATE) and source_date<=current_date",
+    "source_query":"select count(distinct(cust_id)) from staging_dashboard.customer_life_cycle_fed clcf where level = 'EKYC' and status = 'COMPLETED' and date(source_created_at) >= DATE_TRUNC('month', CURRENT_DATE)::date and date(source_created_at)<=current_date ",
+    "destination_query":"select sum(prospects_sourced) from transformation.fo_wise_daily_summary fwds where bank_id ='FED' and date(source_date)>=DATE_TRUNC('month', CURRENT_DATE) and date(source_date)<=current_date",
     "widget_param":"onboarding summary",
     "parameter":"sourced",
     "module":"disbursement",
     "level":"overall"
   },
   "Test Case 108":{
-    "source_query":"select count(cust_id) from staging_dashboard.customer_life_cycle_fed clcf where level = 'CREDIT_CHECK' and status = 'APPROVED' and created_at >= DATE_TRUNC('month', CURRENT_DATE)::date",
+    "source_query":"select count(cust_id) from staging_dashboard.customer_life_cycle_fed clcf where level = 'CREDIT_CHECK' and status = 'APPROVED' and date(source_created_at) >= DATE_TRUNC('month', CURRENT_DATE)::date and date(source_created_at)<=current_date ",
     "destination_query":"select sum(credit_accepted) from transformation.fo_wise_daily_summary fwds where bank_id ='FED' and source_date>=DATE_TRUNC('month', CURRENT_DATE) and source_date<=current_date",
     "widget_param":"onboarding summary",
     "parameter":"credit accepted",
@@ -916,7 +916,7 @@
     "level":"overall"
   },
   "Test Case 109":{
-    "source_query":"select count(cust_id) from staging_dashboard.group_customer_associations_fed gcaf where created_at >= DATE_TRUNC('month', CURRENT_DATE)::date",
+    "source_query":"select count(cust_id) from staging_dashboard.group_customer_associations_fed gcaf where date(source_created_at) >= DATE_TRUNC('month', CURRENT_DATE)::date and date(source_created_at) <=current_date",
     "destination_query":"select sum(group_created) from transformation.fo_wise_daily_summary fwds where bank_id ='FED' and source_date>=DATE_TRUNC('month', CURRENT_DATE) and source_date<=current_date",
     "widget_param":"onboarding summary",
     "parameter":"group created",
@@ -1131,24 +1131,24 @@
     "level":"fo"
   },
   "Test Case 136":{
-    "source_query":"select count(distinct(clcf.cust_id)) from staging_dashboard.customer_life_cycle_fed clcf join staging_dashboard.customers_fed cf on clcf.cust_id =cf.cust_id where level = 'EKYC' and status = 'COMPLETED' and clcf.source_created_at >= DATE_TRUNC('month', CURRENT_DATE)::date and cf.user_id ='us-sh-shc-02768'",
-    "destination_query":"select sum(prospects_sourced) from transformation.fo_wise_daily_summary fwds where bank_id ='FED' and source_date>=DATE_TRUNC('month', CURRENT_DATE) and source_date<=current_date and user_id ='us-sh-shc-02768'",
+    "source_query":"select count(distinct(clcf.cust_id)) from staging_dashboard.customer_life_cycle_fed clcf join staging_dashboard.customers_fed cf on clcf.cust_id =cf.cust_id where level = 'EKYC' and status = 'COMPLETED' and date(clcf.source_created_at) >= DATE_TRUNC('month', CURRENT_DATE)::date and date(clcf.source_created_at) <=current_date  and cf.user_id ='us-sh-shc-02768'",
+    "destination_query":"select sum(prospects_sourced) from transformation.fo_wise_daily_summary fwds where bank_id ='FED' and date(source_date)>=DATE_TRUNC('month', CURRENT_DATE) and date(source_date)<=current_date and user_id ='us-sh-shc-02768'",
     "widget_param":"onboarding_summary_fo",
     "parameter":"sourced",
     "module":"disbursement",
     "level":"fo"
   },
   "Test Case 137":{
-    "source_query":"select count(cust_id) from staging_dashboard.customer_life_cycle_fed clcf where level = 'CREDIT_CHECK' and status = 'APPROVED' and created_at >= DATE_TRUNC('month', CURRENT_DATE)::date",
-    "destination_query":"select sum(credit_accepted) from transformation.fo_wise_daily_summary fwds where bank_id ='FED' and source_date>=DATE_TRUNC('month', CURRENT_DATE) and source_date<=current_date and user_id ='us-sh-shc-02768'",
+    "source_query":"select count(clcf.cust_id) from staging_dashboard.customer_life_cycle_fed clcf join staging_dashboard.customers_fed cf on cf.cust_id = clcf.cust_id where level = 'CREDIT_CHECK' and status = 'APPROVED' and date(clcf.source_created_at) >= DATE_TRUNC('month', CURRENT_DATE)::date and date(clcf.source_created_at) <=current_date  and cf.user_id ='us-sh-shc-02768'",
+    "destination_query":"select sum(credit_accepted) from transformation.fo_wise_daily_summary fwds where bank_id ='FED' and date(source_date)>=DATE_TRUNC('month', CURRENT_DATE) and date(source_date)<=current_date and user_id ='us-sh-shc-02768'",
     "widget_param":"onboarding_summary_fo",
     "parameter":"credit_accepted",
     "module":"disbursement",
     "level":"fo"
   },
   "Test Case 138":{
-    "source_query":"select count(cust_id) from staging_dashboard.group_customer_associations_fed gcaf where created_at >= DATE_TRUNC('month', CURRENT_DATE)::date and created_at <=current_date",
-    "destination_query":"select sum(group_created) from transformation.fo_wise_daily_summary fwds where bank_id ='FED' and source_date>=DATE_TRUNC('month', CURRENT_DATE) and source_date<=current_date and user_id ='us-sh-shc-02768'",
+    "source_query":"select count(cust_id) from staging_dashboard.group_customer_associations_fed gcaf where date(source_created_at) >= DATE_TRUNC('month', CURRENT_DATE)::date and date(source_created_at) <=current_date  ",
+    "destination_query":"select sum(group_created) from transformation.fo_wise_daily_summary fwds where bank_id ='FED' and date(source_date)>=DATE_TRUNC('month', CURRENT_DATE) and date(source_date)<=current_date and user_id ='us-sh-shc-02768'",
     "widget_param":"onboarding_summary_fo",
     "parameter":"group_created",
     "module":"disbursement",
